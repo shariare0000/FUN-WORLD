@@ -1,0 +1,176 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+  margin: 0;
+  text-align: center;
+}
+
+nav {
+  background: #333;
+  padding: 15px;
+}
+
+nav a {
+  color: white;
+  margin: 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: yellow;
+}
+
+h1 {
+  margin-top: 40px;
+}
+
+.box {
+  background: white;
+  margin: 30px auto;
+  padding: 20px;
+  width: 70%;
+  border-radius: 15px;
+}
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.box {
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Button animation */
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #ff4081;
+  color: white;
+  font-size: 16px;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+.dark {
+  background: #121212;
+  color: white;
+}
+
+.dark .box {
+  background: #1e1e1e;
+}
+body {
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #1b2735, #090a0f);
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+.box {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px cyan;
+  backdrop-filter: blur(10px);
+}
+@media (max-width: 600px) {
+  .box {
+    width: 90%;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav a {
+    margin: 5px;
+  }
+}
+.rocket {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 40px;
+  animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0); }
+}
+/* PRO font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Navigation bar */
+nav {
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* Inputs */
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  width: 80px;
+  text-align: center;
+}
+
+/* Results text */
+#result {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Score glow */
+#score {
+  color: gold;
+  text-shadow: 0 0 10px gold;
+}
+button {
+  background: linear-gradient(45deg, #ff00cc, #3333ff);
+  box-shadow: 0 0 15px rgba(255, 0, 204, 0.6);
+}
+button:hover {
+  box-shadow: 0 0 25px cyan;
+}
+/* Leaderboard */
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+ol li {
+  background: rgba(255,255,255,0.15);
+  margin: 10px auto;
+  padding: 12px;
+  border-radius: 10px;
+  width: 60%;
+  box-shadow: 0 0 10px rgba(255,215,0,0.5);
+  font-weight: bold;
+}
+
+ol li:nth-child(1) {
+  color: gold;
+  text-shadow: 0 0 10px gold;
+}
+
+ol li:nth-child(2) {
+  color: silver;
+}
+
+ol li:nth-child(3) {
+  color: #cd7f32; /* bronze */
+}

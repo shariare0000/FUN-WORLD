@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fun World - Jokes</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/download.png" type="image/png">
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f4f4; transition: background 0.5s; }
+    .dark { background: #222; color: #fff; }
+    button { padding: 12px 20px; margin: 10px; font-size: 16px; cursor: pointer; border-radius: 6px; border: none; }
+    .box { margin-top: 50px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <button onclick="toggleDark()">🌙</button>
+  <a href="index.html">Home</a>
+  <a href="games.html">Games</a>
+  <a href="jokes.html">Jokes</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="box">
+  <h1>😂 Jokes</h1>
+  <p id="jokeDisplay">Loading joke...</p>
+  <button onclick="nextJoke()">🎭 Next Joke</button>
+</div>
+
+<button onclick="playSound()">🔊 Click Me</button>
+<div class="rocket">🚀</div>
+
+<script>
+  // Dark mode toggle
+  function toggleDark() { document.body.classList.toggle("dark"); }
+
+  // Example sound function (assuming sound.js is included)
+  function playSound() { console.log("Sound clicked"); }
+
+  // 50 random jokes array
+  const jokes = [
+    "Why did the computer catch a cold? 🤧 Because it had too many windows!",
+    "Why don’t programmers like nature? 🌳 Too many bugs.",
+    "Why do Java developers wear glasses? 👓 Because they don’t C#.",
+    "Why did the robot go on vacation? 🤖 It needed to recharge!",
+    "Why did the scarecrow win an award? 🌾 Because he was outstanding in his field!",
+    "Why did the cookie go to the hospital? 🍪 Because it felt crummy.",
+    "Why did the math book look sad? 📚 Because it had too many problems.",
+    "Why don’t skeletons fight each other? ☠️ They don’t have the guts.",
+    "Why did the tomato turn red? 🍅 Because it saw the salad dressing!",
+    "Why did the bicycle fall over? 🚲 Because it was two-tired!",
+    "Why did the coffee file a police report? ☕ It got mugged!",
+    "Why did the golfer bring two pairs of pants? ⛳ In case he got a hole in one.",
+    "Why did the computer go to therapy? 💻 Too many tabs open.",
+    "Why did the smartphone go to school? 📱 To improve its app-titude!",
+    "Why did the banana go to the doctor? 🍌 It wasn’t peeling well.",
+    "Why did the penguin cross the road? 🐧 To go with the floe.",
+    "Why don’t scientists trust atoms? ⚛️ Because they make up everything!",
+    "Why did the picture go to jail? 🖼️ It was framed!",
+    "Why did the mushroom get invited to the party? 🍄 Because he’s a fungi!",
+    "Why did the skeleton go to the party alone? ☠️ He had no body to go with.",
+    "Why did the computer go to art school? 🎨 To improve its graphics.",
+    "Why did the chicken join a band? 🐔 Because it had the drumsticks!",
+    "Why did the gym close down? 🏋️ It just didn’t work out.",
+    "Why did the light bulb fail school? 💡 It wasn’t too bright.",
+    "Why did the calendar get promoted? 📅 It had a lot of dates.",
+    "Why did the music teacher go to jail? 🎼 Because she got caught with the notes.",
+    "Why did the cow go to space? 🐄 To see the moooon!",
+    "Why did the belt go to jail? 👖 It held up a pair of pants!",
+    "Why did the computer sit on the bench? 💻 It needed to cache some rest.",
+    "Why did the fish blush? 🐟 Because it saw the ocean’s bottom!",
+    "Why did the robot go to school? 🤖 To improve its byte size.",
+    "Why did the balloon go near the needle? 🎈 Because it wanted to pop by!",
+    "Why did the spider go online? 🕷️ To check his web page.",
+    "Why did the tomato go to school? 🍅 To ketchup on lessons!",
+    "Why did the frog take the bus to work? 🐸 His car got toad away!",
+    "Why did the grape stop in the middle of the road? 🍇 It ran out of juice!",
+    "Why did the pencil cross the road? ✏️ To get to the point!",
+    "Why did the ice cream truck break down? 🍦 It wanted to chill.",
+    "Why did the man put his money in the freezer? 💰 He wanted cold hard cash!",
+    "Why did the owl invite his friends over? 🦉 He didn’t give a hoot alone!",
+    "Why did the duck go to the doctor? 🦆 It was feeling under the feather.",
+    "Why did the elephant bring a suitcase? 🐘 He was going on a trunk trip!",
+    "Why did the keyboard break up with the computer? ⌨️ It didn’t feel a connection.",
+    "Why did the cookie go to school? 🍪 Because it wanted to be smart!",
+    "Why did the bird go to the doctor? 🐦 It had tweetment.",
+    "Why did the horse go behind the tree? 🐴 To change its jockeys!",
+    "Why did the rabbit go to the party? 🐇 He wanted to have a hoppy time!",
+    "Why did the leaf go to school? 🍃 To turn over a new leaf.",
+    "Why did the dog sit in the shade? 🐶 Because he didn’t want to be a hot dog!",
+    "Why did the cat sit on the computer? 🐱 To keep an eye on the mouse.",
+    "Why did the duck wear a bow tie? 🦆 He wanted to look quack-tastic!"
+  ];
+
+  let currentIndex = 0;
+
+  function showJoke(index) {
+      document.getElementById("jokeDisplay").innerText = jokes[index];
+  }
+
+  function nextJoke() {
+      currentIndex = (currentIndex + 1) % jokes.length; // loop back to start
+      showJoke(currentIndex);
+  }
+
+  // Show first joke on page load
+  window.onload = () => {
+      showJoke(currentIndex);
+  }
+</script>
+<script>
+/* ---------- Dark Mode ---------- */
+function toggleDark() { document.body.classList.toggle("dark"); }
+
+// Auto-detect system preference for dark mode
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+});
+</script>
+<script src="sound.js"></script>
+</body>
+</html>

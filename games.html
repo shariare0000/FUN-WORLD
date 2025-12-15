@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fun World - Games</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/download.png">
+ 
+
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #f4f4f4;
+        padding-top: 50px;
+        transition: background 0.5s;
+    }
+
+    h1, h2 { color: #333; }
+
+    button {
+        padding: 12px 20px;
+        margin: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 6px;
+        border: none;
+        transition: transform 0.2s;
+    }
+
+    button:hover { transform: scale(1.1); }
+
+    input[type="number"], input[type="text"], select {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 140px;
+    }
+
+    .rock { background: #ff7675; }
+    .paper { background: #74b9ff; }
+    .scissors { background: #55efc4; }
+
+    #timerBarContainer {
+        width: 300px;
+        height: 20px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 10px;
+        margin: 20px auto;
+        overflow: hidden;
+    }
+
+    #timerBar {
+        height: 100%;
+        width: 100%;
+        background: #e74c3c;
+        transition: width 1s linear;
+    }
+
+    #message, #result { margin-top: 20px; font-size: 18px; font-weight: bold; }
+
+    .dark { background: #222; color: #fff; }
+
+    .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        pointer-events: none;
+        animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(500px) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+    <button onclick="toggleDark()">🌙</button>
+    <a href="index.html">Home</a>
+    <a href="games.html">Games</a>
+    <a href="jokes.html">Jokes</a>
+    <a href="about.html">About</a>
+</nav>
+
+<div class="box">
+  <h1>🎮 Fun World Games</h1>
+  <p>Guess the number, Rock Paper Scissors, and more coming soon!</p>
+</div>
+
+<h1>🎮 Mind Game: Guess the Number</h1>
+
+<p>Select range (timer is automatic):</p>
+<select id="rangeSelect" onchange="setGameRange()">
+    <option value="5" selected>1–5 (5s)</option>
+    <option value="10">1–10 (10s)</option>
+    <option value="50">1–50 (30s)</option>
+    <option value="100">1–100 (60s)</option>
+</select>
+
+<br><br>
+<input type="number" id="guessInput" placeholder="Your guess">
+<button onclick="checkGuess()">Guess</button>
+
+<div id="timerBarContainer">
+    <div id="timerBar"></div>
+</div>
+
+<div id="message"></div>
+
+<h1>🎮 Rock Paper Scissors</h1>
+<button class="rock" onclick="playRPS('Rock')">Rock</button>
+<button class="paper" onclick="playRPS('Paper')">Paper</button>
+<button class="scissors" onclick="playRPS('Scissors')">Scissors</button>
+<div id="result"></div>
+
+<h2>🏆 Score: <span id="score">0</span></h2>
+<button onclick="resetScore()">🔄 Reset Score</button>
+
+<div class="box">
+  <h2>🥇 Leaderboard</h2>
+  <input type="text" id="playerName" placeholder="Your name">
+  <button onclick="saveScore()">Save Score</button>
+  <ol id="leaderboard"></ol>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+/* ---------- Dark Mode ---------- */
+function toggleDark() { document.body.classList.toggle("dark"); }
+
+/* ---------- Score & Leaderboard ---------- */
+let score = Number(localStorage.getItem("score")) || 0;
+let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+document.getElementById("score").textContent = score;
+updateLeaderboard();
+
+function saveScore() {
+    const name = document.getElementById("playerName").value;
+    if (!name) return alert("Enter your name!");
+    leaderboard.push({ name, score });
+    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard = leaderboard.slice(0,5);
+    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+    updateLeaderboard();
+}
+
+function updateLeaderboard() {
+    const list = document.getElementById("leaderboard");
+    list.innerHTML = "";
+    leaderboard.forEach(player => {
+        const li = document.createElement("li");
+        li.textContent = `${player.name} — ${player.score}`;
+        list.appendChild(li);
+    });
+}
+
+function resetScore() {
+    score = 0;
+    localStorage.setItem("score", score);
+    document.getElementById("score").textContent = score;
+}
+
+/* ---------- Mind Game ---------- */
+let secretNumber = 1;
+let maxTime = 5;
+let timeLeft = maxTime;
+let maxRange = 5;
+let timerBar = document.getElementById("timerBar");
+let gameOver = false;
+
+// Map range to timer
+const rangeTimerMap = {
+    5: 5,
+    10: 10,
+    50: 30,
+    100: 60
+};
+
+function setGameRange() {
+    maxRange = Number(document.getElementById("rangeSelect").value);
+    maxTime = rangeTimerMap[maxRange];
+    timeLeft = maxTime;
+    secretNumber = Math.floor(Math.random() * maxRange) + 1;
+    document.getElementById("guessInput").value = "";
+    document.getElementById("guessInput").placeholder = `1–${maxRange}`;
+    timerBar.style.width = "100%";
+    gameOver = false;
+    document.getElementById("message").innerText = "";
+}
+
+// Initialize game
+setGameRange();
+
+let timer = setInterval(() => {
+    if(gameOver) return;
+    timeLeft--;
+    timerBar.style.width = (timeLeft/maxTime*100) + "%";
+    if(timeLeft <=0){
+        document.getElementById("message").innerHTML = `⏰ Time's up! Number was <b>${secretNumber}</b>`;
+        gameOver = true;
+    }
+},1000);
+
+function checkGuess() {
+    if(gameOver) return;
+    const guess = Number(document.getElementById("guessInput").value);
+    if(!guess || guess<1 || guess>maxRange) return alert(`Enter 1-${maxRange}`);
+    if(guess === secretNumber){
+        document.getElementById("message").innerHTML = `🎉 Correct!`;
+        score++;
+        localStorage.setItem("score", score);
+        document.getElementById("score").textContent = score;
+        winConfetti();
+        secretNumber = Math.floor(Math.random()*maxRange)+1;
+        timeLeft = maxTime;
+    } else {
+        document.getElementById("message").innerText = "❌ Wrong! Try again";
+    }
+    document.getElementById("guessInput").value = "";
+    document.getElementById("guessInput").focus();
+}
+
+function winConfetti() {
+    for(let i=0;i<100;i++){
+        confetti({
+            particleCount: 1,
+            startVelocity: 50,
+            spread: 360,
+            origin: {x: Math.random(), y: Math.random()-0.2}
+        });
+    }
+}
+
+/* ---------- Rock Paper Scissors ---------- */
+function playRPS(userChoice){
+    const choices=['Rock','Paper','Scissors'];
+    const computerChoice=choices[Math.floor(Math.random()*3)];
+    let result="";
+    if(userChoice===computerChoice) result="It's a Tie!";
+    else if(
+        (userChoice==='Rock'&&computerChoice==='Scissors')||
+        (userChoice==='Paper'&&computerChoice==='Rock')||
+        (userChoice==='Scissors'&&computerChoice==='Paper')
+    ) result="You Win!";
+    else result="Computer Wins!";
+    document.getElementById("result").innerHTML = 
+        `You chose <b>${userChoice}</b><br>Computer chose <b>${computerChoice}</b><br><br>${result}`;
+}
+</script>
+<script>
+/* ---------- Dark Mode ---------- */
+function toggleDark() { document.body.classList.toggle("dark"); }
+
+// Auto-detect system preference for dark mode
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+});
+</script>
+
+<script src="sound.js"></script>
+</body>
+</html>
